@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neighborhood Map</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+
+    <!-- Knockout.js -->
+    <script src="js/lib/knockout.min.js"></script>
+  </head>
+  <body>
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <ul class="nav sidebar-nav">
+        <li>
+          Neighborhood Map
+        </li>
+      </ul>
+    </div>
+
+    <div id="main">
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Neighborhood Map</a>
+            <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+          </div>
+      </nav>
+      <div id="map"></div>
+    </div>
+    <!--<script src="js/app.js"></script>-->
+    <script src="js/map.js"></script>
+    <script src="js/main.js"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAxvlUJa8lIo1GIldft5bAwrxFXLJZq70M&callback=initMap&callback=initMap">
+    </script>
+
+  <script>
+  function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+      document.getElementById("main").style.marginLeft = "250px";
+      document.getElementById("map").style.left = "250px";
+  }
+
+  function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+      document.getElementById("main").style.marginLeft= "0";
+      document.getElementById("map").style.left= "0";
+  }
+  </script>
+  </body>
+</html>
