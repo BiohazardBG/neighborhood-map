@@ -45,9 +45,10 @@ var locations = [
     }
 ];
 
-var markers = [];
+// declaring global variables
 var map;
 var infoWindow;
+var bounds;
 
 function initMap() {
     var santaCruz = {
@@ -60,8 +61,51 @@ function initMap() {
         mapTypeControl: false
     });
     infowindow = new google.maps.InfoWindow();
+
+    bounds = new google.maps.LatLngBounds();
    
     ko.applyBindings(new ViewModel());
+}
+
+// Location model 
+var LocationMarker = function(data) {
+    this.title = data.title;
+    this.position = data.location;
+
+    this.visible = ko.observable(true);
+
+    // Style the markers a bit. This will be our listing marker icon.
+    var defaultIcon = makeMarkerIcon('0091ff');
+    // Create a "highlighted location" marker color for when the user
+    // mouses over the marker.
+    var highlightedIcon = makeMarkerIcon('FFFF24');
+
+    // Create a marker per location, and put into markers array
+    this.marker = new google.maps.Marker({
+        position: this.position,
+        title: this.title,
+        animation: google.maps.Animation.DROP,
+        icon: defaultIcon
+    });
+
+    // set marker and extend bounds (showListings)
+    this.marker.setMap(map);
+    bounds.extend(this.marker.position);
+    map.fitBounds(bounds);
+    
+    // Create an onclick even to open an indowindow at each marker
+    this.marker.addListener('click', function() {
+        populateInfoWindow(self, infoWindow);
+    });
+    // Two event listeners - one for mouseover, one for mouseout,
+    // to change the colors back and forth.
+    this.marker.addListener('mouseover', function() {
+        this.setIcon(highlightedIcon);
+    });
+    this.marker.addListener('mouseout', function() {
+        this.setIcon(defaultIcon);
+    });
+
 }
 
 /* View Model */
@@ -71,49 +115,18 @@ var ViewModel = function() {
 
     self.showNav = ko.observable(false);
 
-    // Style the markers a bit. This will be our listing marker icon.
-    var defaultIcon = makeMarkerIcon('0091ff');
+    this.mapList = ko.observableArray([]);
 
-    // Create a "highlighted location" marker color for when the user
-    // mouses over the marker.
-    var highlightedIcon = makeMarkerIcon('FFFF24');
-
-    // The following group uses the location array to create an array of markers
-    for (var i = 0; i < locations.length; i++) {
-        // get position from the location array
-        var position = locations[i].location;
-        var title = locations[i].title;
-        // Create a marker per location, and put into markers array
-        var marker = new google.maps.Marker({
-            position: position,
-            title: title,
-            animation: google.maps.Animation.DROP,
-            icon: defaultIcon,
-            id: i
-        });
-        // // Push the marker to our array of markers
-        markers.push(marker);
-        
-        // Create an onclick even to open an indowindow at each marker
-        marker.addListener('click', function() {
-            populateInfoWindow(this, infoWindow);
-        });
-        // Two event listeners - one for mouseover, one for mouseout,
-        // to change the colors back and forth.
-        marker.addListener('mouseover', function() {
-            this.setIcon(highlightedIcon);
-        });
-        marker.addListener('mouseout', function() {
-            this.setIcon(defaultIcon);
-        });
-    }
-
-    document.getElementById('show-listings').addEventListener('click', showListings);
-    document.getElementById('hide-listings').addEventListener('click', function() {
-        hideListings(markers);
+    locations.forEach(function(location) {
+        self.mapList.push( new LocationMarker(location) );
     });
 
-    showListings();
+    // document.getElementById('show-listings').addEventListener('click', showListings);
+    // document.getElementById('hide-listings').addEventListener('click', function() {
+    //     hideListings(markers);
+    // });
+
+    // showListings();
 
     self.toggleVisibility = function() {
         self.showNav(!self.showNav());
@@ -191,19 +204,20 @@ function makeMarkerIcon(markerColor) {
     return markerImage;
 }
 
-// This function will loop through the markers array and display them all.
-function showListings() {
-    var bounds = new google.maps.LatLngBounds();
-    // Extend the boundaries of the map for each marker and display the marker
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
-        bounds.extend(markers[i].position);
-    }
-    map.fitBounds(bounds);
-}
-// This function will loop through the listings and hide them all.
-function hideListings(markers) {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-    }
-}
+// // This function will loop through the markers array and display them all.
+// function showListings() {
+//     var bounds = new google.maps.LatLngBounds();
+//     // Extend the boundaries of the map for each marker and display the marker
+//     for (var i = 0; i < markers.length; i++) {
+//         markers[i].setMap(map);
+//         bounds.extend(markers[i].position);
+//     }
+//     map.fitBounds(bounds);
+// }
+
+// // This function will loop through the listings and hide them all.
+// function hideListings(markers) {
+//     for (var i = 0; i < markers.length; i++) {
+//         markers[i].setMap(null);
+//     }
+// }

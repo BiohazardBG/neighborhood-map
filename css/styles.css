@@ -71,3 +71,8 @@ body {
     z-index: -4;
     transition: left .5s;
 }
+
+.list-group-item {
+    margin: 0 5px;
+    color: black;
+}
