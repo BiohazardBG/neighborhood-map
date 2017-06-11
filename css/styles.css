@@ -4,6 +4,7 @@ body {
 
 .navbar {
     border-radius: 0px;
+    margin-bottom: 0;
 }
 
 .nav-title {
@@ -12,67 +13,35 @@ body {
     color: white;
 }
 
-.side-navheader {
-    color: rgb(157, 157, 157);
-}
-
-.sidenav {
+#map {
+    margin: 0;
     height: 100%;
-    width: 250px;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: rgb(34, 34, 34);
-    color: white;
-    overflow-x: hidden;
-    transition: 0.5s;
-}
-
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 20px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidenav a:hover, .offcanvas a:focus{
-    color: #f1f1f1;
-}
-
-.sidenav .closebtn {
     position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-}
-
-#main {
-    transition: margin-left .5s;
-    padding: 0;
-    margin-left: 250px;
-    margin-right: 0px;
-}
-
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-
-#map { 
-    position: absolute;
-    left: 250px;
-    top: 50px;
+    left: 0px;
+    top: 0px;
     bottom: 0;
     right: 0;
-    z-index: -4;
+    height: 1000px;
     transition: left .5s;
 }
 
-.list-group-item {
-    margin: 0 5px;
-    color: black;
+.sidenav {
+    margin: 0;
+    position: absolute;
+    top: 0px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: green;
 }
+
+.list-group-item {
+    margin: 0;
+    color: black;
+    border-bottom: solid;
+}
+
+#pano {
+    width: 200px;
+    height: 200px;
+}   
