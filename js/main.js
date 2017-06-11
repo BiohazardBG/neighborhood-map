@@ -100,8 +100,9 @@ var LocationMarker = function(data) {
 
     $.getJSON(reqURL).done(function(data) {
 		var results = data.response.venues[0];
-        self.street = results.location.formattedAddress[0];
-        self.city = results.location.formattedAddress[1];
+        self.street = results.location.formattedAddress[0] ? results.location.formattedAddress[0]: 'N/A';
+        self.city = results.location.formattedAddress[1] ? results.location.formattedAddress[1]: 'N/A';
+        self.phone = results.contact.formattedPhone ? results.contact.formattedPhone : 'N/A';
     });
 
     // Create a marker per location, and put into markers array
@@ -109,24 +110,23 @@ var LocationMarker = function(data) {
         position: this.position,
         title: this.title,
         animation: google.maps.Animation.DROP,
-        icon: defaultIcon,
-        setVisible: this.visible
-    });
+        icon: defaultIcon
+    });    
 
     // set marker and extend bounds (showListings)
-    this.marker.setMap(map);
-    bounds.extend(this.marker.position);
-    map.fitBounds(bounds);
+    if(this.visible() === true) {
+        this.marker.setMap(map);
+        bounds.extend(this.marker.position);
+        map.fitBounds(bounds);
+    } else {
+        this.marker.setMap(null);
+    }
     
     // Create an onclick even to open an indowindow at each marker
     this.marker.addListener('click', function() {
-        populateInfoWindow(this, self.street, self.city, infoWindow);
+        populateInfoWindow(this, self.street, self.city, self.phone, infoWindow);
         toggleBounce(this);
     });
-
-	this.bounce = function(place) {
-		google.maps.event.trigger(self.marker, 'click');
-	};
 
     // Two event listeners - one for mouseover, one for mouseout,
     // to change the colors back and forth.
@@ -141,12 +141,9 @@ var LocationMarker = function(data) {
         google.maps.event.trigger(self.marker, 'click');
     }
 
-    // document.getElementById('show-listings').addEventListener('click', showListings);
-    // document.getElementById('hide-listings').addEventListener('click', function() {
-    //     hideListings(markers);
-    // });
-
-    // showListings();
+    this.bounce = function(place) {
+		google.maps.event.trigger(self.marker, 'click');
+	};
 
 }
 
@@ -157,11 +154,30 @@ var ViewModel = function() {
 
     self.showNav = ko.observable(false);
 
+    this.searchItem = ko.observable('');
+
     this.mapList = ko.observableArray([]);
 
     locations.forEach(function(location) {
         self.mapList.push( new LocationMarker(location) );
     });
+
+    this.locationList = ko.computed(function() {
+        console.log(self.searchItem());
+        var searchFilter = self.searchItem().toLowerCase();
+        if (searchFilter) {
+            return ko.utils.arrayFilter(self.mapList(), function(location) {
+                var str = location.title.toLowerCase();
+                var result = str.includes(searchFilter);
+                location.visible(result);
+				return result;
+			});
+        }
+        self.mapList().forEach(function(location) {
+            location.visible(true);
+        });
+        return self.mapList();
+    }, self);
 
     self.toggleVisibility = function() {
         self.showNav(!self.showNav());
@@ -182,7 +198,7 @@ var ViewModel = function() {
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
-function populateInfoWindow(marker, street, city, infowindow) {
+function populateInfoWindow(marker, street, city, phone, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
         // Clear the infowindow content to give the streetview time to load.
@@ -197,7 +213,7 @@ function populateInfoWindow(marker, street, city, infowindow) {
         var radius = 50;
 
         var windowContent = '<h4>' + marker.title + '</h4>' + 
-            '<p>' + street + "<br>" + city + "</p>" ;
+            '<p>' + street + "<br>" + city + '<br>' + phone + "</p>";
 
         // In case the status is OK, which means the pano was found, compute the
         // position of the streetview image, then calculate the heading, then get a
