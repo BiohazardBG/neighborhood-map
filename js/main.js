@@ -42,6 +42,13 @@ var locations = [
             lat: 37.0716919,
             lng: -122.0838439
         }
+    },
+    {
+        title: 'Trader Joe\'s',
+        location: {
+            lat: 36.974402,
+            lng: -122.0246995
+        }
     }
 ];
 
@@ -60,7 +67,7 @@ function initMap() {
         center: santaCruz,
         mapTypeControl: false
     });
-    infowindow = new google.maps.InfoWindow();
+    infoWindow = new google.maps.InfoWindow();
 
     bounds = new google.maps.LatLngBounds();
    
@@ -73,6 +80,9 @@ var LocationMarker = function(data) {
 
     this.title = data.title;
     this.position = data.location;
+    this.street = '',
+    this.city = '',
+    this.phone = '';
 
     this.visible = ko.observable(true);
 
@@ -81,6 +91,18 @@ var LocationMarker = function(data) {
     // Create a "highlighted location" marker color for when the user
     // mouses over the marker.
     var highlightedIcon = makeMarkerIcon('FFFF24');
+
+    var clientID = 'XYRC2FECYK04KM4TODERCX20OCOMVPTRBWSTSLO1FS5NGA3W';
+    var clientSecret = 'QUOBRX1CIHPX5WGV4BBNYTQUZP2A5QWHPORCG4KIEQWOZKBX';
+
+    // get JSON request of foursquare data
+    var reqURL = 'https://api.foursquare.com/v2/venues/search?ll=' + this.position.lat + ',' + this.position.lng + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20160118' + '&query=' + this.title;
+
+    $.getJSON(reqURL).done(function(data) {
+		var results = data.response.venues[0];
+        self.street = results.location.formattedAddress[0];
+        self.city = results.location.formattedAddress[1];
+    });
 
     // Create a marker per location, and put into markers array
     this.marker = new google.maps.Marker({
@@ -98,9 +120,13 @@ var LocationMarker = function(data) {
     
     // Create an onclick even to open an indowindow at each marker
     this.marker.addListener('click', function() {
-        populateInfoWindow(self.marker, infowindow);
-        toggleBounce(self.marker);
+        populateInfoWindow(this, self.street, self.city, infoWindow);
+        toggleBounce(this);
     });
+
+	this.bounce = function(place) {
+		google.maps.event.trigger(self.marker, 'click');
+	};
 
     // Two event listeners - one for mouseover, one for mouseout,
     // to change the colors back and forth.
@@ -156,7 +182,7 @@ var ViewModel = function() {
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
-function populateInfoWindow(marker, infowindow) {
+function populateInfoWindow(marker, street, city, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
         // Clear the infowindow content to give the streetview time to load.
@@ -169,6 +195,10 @@ function populateInfoWindow(marker, infowindow) {
         });
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;
+
+        var windowContent = '<h4>' + marker.title + '</h4>' + 
+            '<p>' + street + "<br>" + city + "</p>" ;
+
         // In case the status is OK, which means the pano was found, compute the
         // position of the streetview image, then calculate the heading, then get a
         // panorama from that and set the options
@@ -177,7 +207,7 @@ function populateInfoWindow(marker, infowindow) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
                     nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+                infowindow.setContent(windowContent + '<div id="pano"></div>');
                 var panoramaOptions = {
                     position: nearStreetViewLocation,
                     pov: {
@@ -188,8 +218,7 @@ function populateInfoWindow(marker, infowindow) {
                 var panorama = new google.maps.StreetViewPanorama(
                     document.getElementById('pano'), panoramaOptions);
             } else {
-                infowindow.setContent('<div>' + marker.title + '</div>' +
-                    '<div>No Street View Found</div>');
+                infowindow.setContent(windowContent + '<div style="color: red">No Street View Found</div>');
             }
         }
         // Use streetview service to get the closest streetview image within
