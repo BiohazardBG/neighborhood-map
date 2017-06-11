@@ -2,6 +2,20 @@ body {
     font-family: "Lato", sans-serif;
 }
 
+.navbar {
+    border-radius: 0px;
+}
+
+.nav-title {
+    font-size: 25px;
+    text-transform: uppercase;
+    color: white;
+}
+
+.side-navheader {
+    color: rgb(157, 157, 157);
+}
+
 .sidenav {
     height: 100%;
     width: 250px;
@@ -9,16 +23,16 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: rgb(34, 34, 34);
+    color: white;
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 60px;
 }
 
 .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 20px;
     color: #818181;
     display: block;
     transition: 0.3s;
@@ -40,6 +54,7 @@ body {
     transition: margin-left .5s;
     padding: 0;
     margin-left: 250px;
+    margin-right: 0px;
 }
 
 @media screen and (max-height: 450px) {
@@ -47,12 +62,12 @@ body {
   .sidenav a {font-size: 18px;}
 }
 
-#map {
-    height: 100%;
-    width: 100%;
+#map { 
     position: absolute;
     left: 250px;
     top: 50px;
+    bottom: 0;
+    right: 0;
     z-index: -4;
     transition: left .5s;
 }
