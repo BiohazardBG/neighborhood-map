@@ -1,4 +1,4 @@
-# Item Catalog
+# Neighborhood Map
 
 > Dustin D'Avignon
 
@@ -25,7 +25,7 @@ This is the fifth project for the Udacity Full Stack Nanodegree. The Neighborhoo
 - Or see the demo at https://ddavignon.github.io/neighborhood-map/
 
 
-### reference materials
+### Reference materials
 https://developers.google.com/maps/documentation/javascript/
 
 https://developer.foursquare.com/
