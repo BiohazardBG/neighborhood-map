@@ -1,4 +1,4 @@
-/* Model */
+/* Model Data */
 
 var locations = [
     {
@@ -50,6 +50,7 @@ var map;
 var infoWindow;
 var bounds;
 
+// google maps init
 function initMap() {
     var santaCruz = {
         lat: 36.9741171,
@@ -72,7 +73,7 @@ function initMap() {
     ko.applyBindings(new ViewModel());
 }
 
-// Location model 
+/* Location Model */ 
 var LocationMarker = function(data) {
     var self = this;
 
@@ -139,10 +140,12 @@ var LocationMarker = function(data) {
         this.setIcon(defaultIcon);
     });
 
+    // show item info when selected from list
     this.show = function(location) {
         google.maps.event.trigger(self.marker, 'click');
     }
 
+    // creates bounce effect when item selected
     this.bounce = function(place) {
 		google.maps.event.trigger(self.marker, 'click');
 	};
@@ -158,10 +161,12 @@ var ViewModel = function() {
 
     this.mapList = ko.observableArray([]);
 
+    // add location markers for each location
     locations.forEach(function(location) {
         self.mapList.push( new LocationMarker(location) );
     });
 
+    // locations viewed on map
     this.locationList = ko.computed(function() {
         var searchFilter = self.searchItem().toLowerCase();
         if (searchFilter) {
