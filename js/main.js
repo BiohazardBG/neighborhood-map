@@ -4,50 +4,43 @@ var locations = [
     {
         title: 'Canna Cruz',
         location: {
-            lat: 36.9852565,
-            lng: -122.0321366
+            lat: 36.9863342,
+            lng: -122.0324849
         }
     },
     {
         title: 'Santa Cruz Naturals',
         location: {
-            lat: 36.9757474,
-            lng: -121.8881432
+            lat: 36.9757459,
+            lng: -121.8882603
         }
     },
     {
         title: 'KindPeoples Collective',
         location: {
-            lat: 37.0025934,
-            lng: -122.0052452
+            lat: 36.9856965,
+            lng: -121.9827407
         }
     },
     {
         title: 'Granny Purps',
         location: {
-            lat: 36.9851449,
-            lng: -121.9680126
+            lat: 36.9851404,
+            lng: -121.9659725
         }
     },
     {
         title: 'Herbal Cruz',
         location: {
-            lat: 36.9814499,
-            lng: -121.9855979
+            lat: 36.9671524,
+            lng: -121.9649442
         }
     },
     {
         title: 'Central Coast Wellness Center',
         location: {
-            lat: 37.0716919,
-            lng: -122.0838439
-        }
-    },
-    {
-        title: 'Trader Joe\'s',
-        location: {
-            lat: 36.974402,
-            lng: -122.0246995
+            lat: 37.0721581,
+            lng: -122.0840406
         }
     }
 ];
@@ -67,6 +60,11 @@ function initMap() {
         center: santaCruz,
         mapTypeControl: false
     });
+
+    if(!map) {
+        alert('Something went wrong with Google Maps!');
+    }
+
     infoWindow = new google.maps.InfoWindow();
 
     bounds = new google.maps.LatLngBounds();
@@ -83,6 +81,7 @@ var LocationMarker = function(data) {
     this.street = '',
     this.city = '',
     this.phone = '';
+    this.locationURL = '';
 
     this.visible = ko.observable(true);
 
@@ -103,6 +102,8 @@ var LocationMarker = function(data) {
         self.street = results.location.formattedAddress[0] ? results.location.formattedAddress[0]: 'N/A';
         self.city = results.location.formattedAddress[1] ? results.location.formattedAddress[1]: 'N/A';
         self.phone = results.contact.formattedPhone ? results.contact.formattedPhone : 'N/A';
+    }).fail(function() {
+        alert('Something went wrong with foursquare')
     });
 
     // Create a marker per location, and put into markers array
@@ -126,6 +127,7 @@ var LocationMarker = function(data) {
     this.marker.addListener('click', function() {
         populateInfoWindow(this, self.street, self.city, self.phone, infoWindow);
         toggleBounce(this);
+        map.setCenter(this.getPosition());
     });
 
     // Two event listeners - one for mouseover, one for mouseout,
@@ -152,8 +154,6 @@ var LocationMarker = function(data) {
 var ViewModel = function() {
     var self = this;
 
-    self.showNav = ko.observable(false);
-
     this.searchItem = ko.observable('');
 
     this.mapList = ko.observableArray([]);
@@ -163,7 +163,6 @@ var ViewModel = function() {
     });
 
     this.locationList = ko.computed(function() {
-        console.log(self.searchItem());
         var searchFilter = self.searchItem().toLowerCase();
         if (searchFilter) {
             return ko.utils.arrayFilter(self.mapList(), function(location) {
@@ -178,21 +177,6 @@ var ViewModel = function() {
         });
         return self.mapList();
     }, self);
-
-    self.toggleVisibility = function() {
-        self.showNav(!self.showNav());
-        if (self.showNav()) {
-            document.getElementById("mySidenav").style.width = "250px";
-            document.getElementById("main").style.marginLeft = "250px";
-            document.getElementById("map").style.left = "250px";
-        } else {
-            document.getElementById("mySidenav").style.width = "0";
-            document.getElementById("main").style.marginLeft = "0";
-            document.getElementById("map").style.left = "0";
-            document.getElementById("map").style.right = "0";
-        }
-    };
-
 };
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
