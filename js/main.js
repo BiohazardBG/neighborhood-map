@@ -269,21 +269,3 @@ function makeMarkerIcon(markerColor) {
         new google.maps.Size(21, 34));
     return markerImage;
 }
-
-// // This function will loop through the markers array and display them all.
-// function showListings() {
-//     var bounds = new google.maps.LatLngBounds();
-//     // Extend the boundaries of the map for each marker and display the marker
-//     for (var i = 0; i < markers.length; i++) {
-//         markers[i].setMap(map);
-//         bounds.extend(markers[i].position);
-//     }
-//     map.fitBounds(bounds);
-// }
-
-// // This function will loop through the listings and hide them all.
-// function hideListings(markers) {
-//     for (var i = 0; i < markers.length; i++) {
-//         markers[i].setMap(null);
-//     }
-// }

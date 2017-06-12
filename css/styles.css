@@ -21,7 +21,7 @@ body {
     top: 0px;
     bottom: 0;
     right: 0;
-    height: 1000px;
+    z-index: -4;
     transition: left .5s;
 }
 
@@ -38,6 +38,7 @@ body {
 .list-group-item {
     margin: 0;
     color: black;
+    border-left: solid;
     border-bottom: solid;
 }
 
