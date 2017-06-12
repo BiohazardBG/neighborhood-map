@@ -21,7 +21,8 @@ This is the fifth project for the Udacity Full Stack Nanodegree. The Neighborhoo
 ## Getting Started
 
 - Download the project or clone the repository
-- Open `index.html` or checkout at 
+- Open `index.html`
+- Or see the demo at https://ddavignon.github.io/neighborhood-map/
 
 
 ### reference materials
@@ -31,6 +32,5 @@ https://developer.foursquare.com/
 
 https://www.w3schools.com/
 
-- search items
 http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
 
