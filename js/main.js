@@ -15,15 +15,16 @@ function initMap() {
         mapTypeControl: false
     });
 
-    if(!map) {
-        alert('Something went wrong with Google Maps!');
-    }
-
     infoWindow = new google.maps.InfoWindow();
 
     bounds = new google.maps.LatLngBounds();
    
     ko.applyBindings(new ViewModel());
+}
+
+// handle map error
+function googleMapsError() {
+    alert('An error occurred with Google Maps!');
 }
 
 /* Location Model */ 
@@ -107,7 +108,6 @@ var LocationMarker = function(data) {
 };
 
 /* View Model */
-
 var ViewModel = function() {
     var self = this;
 
