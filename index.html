@@ -11,12 +11,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 
-    <!-- Knockout.js -->
-    <script src="js/lib/knockout.min.js"></script>
   </head>
   <body>
+
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -24,6 +23,7 @@
             <span class="nav-title">NH Map</span>
           </div>
         </div>
+
         <form class="navbar-form navbar-right" role="search">
           <div class="input-group">
               <input type="text" class="form-control" placeholder="Search" name="q" data-bind="textInput: searchItem, valueUpdate: 'afterkeydown'">
@@ -34,26 +34,33 @@
         </form>
       </div>
     </nav>
-    <div class="container-fluid">
+
+    <main class="container-fluid">
       <div class="row">
         <div id="map"></div>
-        <div class="col-md-3 col-md-offset-9 collapsed in" id="navbarSupportedContent">
+
+        <aside class="col-md-3 col-md-offset-9 collapsed in" id="navbarSupportedContent">
           <div class="sidenav">
             <div class="list-group" data-bind="foreach: locationList">
                 <a href="#" class="list-group-item list-group-item-action" data-bind="text: title, click: show"></a>
             </div>
           </div>
-        </div>
+        </aside>
       </div>
-    </div>
+    </main>
+
     <footer class="footer">
       <div class="container text-left">
         <a href="https://developer.foursquare.com/" class="href" target="_blank">
-          <img id="foursquare-img" src="http://www.freeiconspng.com/uploads/foursquare-icon-22.png" alt="used with foursquare" />
+          <img id="foursquare-img" src="http://www.freeiconspng.com/uploads/foursquare-icon-22.png" alt="used with foursquare" >
         </a>
-        <span style="font-size: .8em">Dustin D'Avignon &copy; All Rights reserved</span>
+        <span class="footer-name">Dustin D'Avignon &copy; All Rights reserved</span>
       </div>
     </footer>
+
+    <!-- Knockout.js -->
+    <script src="js/lib/knockout.min.js"></script>
+    <script src="js/data.js"></script>
     <script src="js/main.js"></script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAxvlUJa8lIo1GIldft5bAwrxFXLJZq70M&callback=initMap&callback=initMap">

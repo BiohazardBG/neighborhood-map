@@ -1,50 +1,3 @@
-/* Model Data */
-
-var locations = [
-    {
-        title: 'Canna Cruz',
-        location: {
-            lat: 36.9863342,
-            lng: -122.0324849
-        }
-    },
-    {
-        title: 'Santa Cruz Naturals',
-        location: {
-            lat: 36.9757459,
-            lng: -121.8882603
-        }
-    },
-    {
-        title: 'KindPeoples Collective',
-        location: {
-            lat: 36.9856965,
-            lng: -121.9827407
-        }
-    },
-    {
-        title: 'Granny Purps',
-        location: {
-            lat: 36.9851404,
-            lng: -121.9659725
-        }
-    },
-    {
-        title: 'Herbal Cruz',
-        location: {
-            lat: 36.9671524,
-            lng: -121.9649442
-        }
-    },
-    {
-        title: 'Central Coast Wellness Center',
-        location: {
-            lat: 37.0721581,
-            lng: -122.0840406
-        }
-    }
-];
-
 // declaring global variables
 var map;
 var infoWindow;
@@ -114,14 +67,16 @@ var LocationMarker = function(data) {
         icon: defaultIcon
     });    
 
-    // set marker and extend bounds (showListings)
-    if(this.visible() === true) {
-        this.marker.setMap(map);
-        bounds.extend(this.marker.position);
-        map.fitBounds(bounds);
-    } else {
-        this.marker.setMap(null);
-    }
+    self.filterMarkers = ko.computed(function () {
+        // set marker and extend bounds (showListings)
+        if(self.visible() === true) {
+            self.marker.setMap(map);
+            bounds.extend(self.marker.position);
+            map.fitBounds(bounds);
+        } else {
+            self.marker.setMap(null);
+        }
+    });
     
     // Create an onclick even to open an indowindow at each marker
     this.marker.addListener('click', function() {
